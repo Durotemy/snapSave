@@ -1,36 +1,20 @@
-import React from 'react';
 import { Text, TextStyle, StyleSheet } from 'react-native';
 
-interface CustomTextProps {
+export interface CustomTextProps {
   children: React.ReactNode;
   variant?: 'regular' | 'bold' | 'semibold' | 'light' | 'medium';
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
   color?: string;
+  textAlign?: 'left' | 'right' | 'center';
   style?: TextStyle;
+  padding?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
+  paddingLeft?: number;
+  paddingRight?: number;
+  paddingTop?: number;
+  paddingBottom?: number;
 }
 
-const CustomText: React.FC<CustomTextProps> = ({
-  children,
-  variant = 'regular',
-  size = 'md',
-  color = '#000000',
-  style,
-}) => {
-  return (
-    <Text
-      style={[
-        styles[variant],
-        styles[size],
-        { color },
-        style,
-      ]}
-    >
-      {children}
-    </Text>
-  );
-};
-
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   // Font variants (Nunito)
   regular: {
     fontFamily: 'Nunito-Regular',
@@ -47,7 +31,7 @@ const styles = StyleSheet.create({
   medium: {
     fontFamily: 'Nunito-Medium',
   },
-  
+
   // Font sizes
   xs: {
     fontSize: 12,
@@ -71,5 +55,3 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
 });
-
-export default CustomText;

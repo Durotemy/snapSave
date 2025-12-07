@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "451329125142",
+    "project_id": "snapsave-f2c94",
+    "storage_bucket": "snapsave-f2c94.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451329125142:android:53717761499edda5547e37",
+        "android_client_info": {
+          "package_name": "com.snapsave"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA15PBUPAOZ8QAiklsQW5BHiu9VxSzwcUs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
