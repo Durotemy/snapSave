@@ -1,7 +1,7 @@
 import { Alert, Pressable, StyleSheet } from 'react-native';
 import React from 'react';
 import Layout from '../../../layout';
-import { VStack } from '@gluestack-ui/themed';
+import { set, VStack } from '@gluestack-ui/themed';
 import CustomText from '../../../components/CustomText';
 import FormInputField from '../../../components/InputField';
 import CustomHeader from '../../../components/CustomHeader';
@@ -10,14 +10,28 @@ import useFormInput from '../../../hooks/useFormInput';
 import { useBiometric } from '../../../hooks/BiometricHook';
 import CustomButton from '../../../components/customButton.tsx';
 import { useUserAuth } from '../../../hooks/userAuth.ts';
+import { useNavigation } from '@react-navigation/native';
+
+import auth from '@react-native-firebase/auth';
 
 const LoginScreen = () => {
-  const { login } = useUserAuth();
+  const navigation = useNavigation();
+  const [loading, setLoading] = React.useState(false);
+  const { login, setUser } = useUserAuth();
+  const CreateWithAuth = () => {
+    auth()
+      .createUserWithEmailAndPassword('Email', 'Password')
+      .then(() => {
+        console.log('User account created & signed in!');
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   const email = useFormInput('');
   const password = useFormInput('');
 
-  // Use the biometric hook
   const {
     isAvailable: isBiometricAvailable,
     biometricTypeName,
@@ -59,20 +73,41 @@ const LoginScreen = () => {
   };
 
   // Centralized login logic
-  const performLogin = (emailValue: string, passwordValue: string) => {
-    console.log('Login with:', { email: emailValue, password: passwordValue });
+  const performLogin = async (emailValue: string, passwordValue: string) => {
+    setLoading(true);
 
-    // TODO: Add your login API call here
-    // Example:
-    // try {
-    //   const response = await authService.login(emailValue, passwordValue);
-    //   if (response.success) {
-    //     // Navigate to home screen
-    //     navigation.navigate('Home');
-    //   }
-    // } catch (error) {
-    //   Alert.alert('Login Failed', error.message);
-    // }
+    try {
+      const credential = await auth().signInWithEmailAndPassword(
+        emailValue,
+        passwordValue,
+      );
+
+      const here = await credential.user.reload();
+      console.log('here is food', here);
+
+      setUser({
+        id: credential.user.uid,
+        email: credential.user.email ?? '',
+        phonenumber: '',
+      });
+
+      setLoading(false);
+      if (!credential.user.emailVerified) {
+        await auth().signOut();
+        Alert.alert(
+          'Email not verified',
+          'Please verify your email before logging in.',
+        );
+        return;
+      }
+
+      // ✅ SUCCESS
+      console.log('User logged in:', credential.user.uid);
+      // Navigation will happen via onAuthStateChanged
+    } catch (error: any) {
+      setLoading(false);
+      Alert.alert('Login Failed', error.message);
+    }
   };
 
   // Handle biometric login
@@ -112,6 +147,7 @@ const LoginScreen = () => {
 
   return (
     <Layout>
+      {loading && <CustomText>Loading...</CustomText>}
       <VStack flex={1} justifyContent="space-between">
         <VStack>
           <CustomHeader textSize="3xl" text="Login to continue" />
@@ -142,6 +178,11 @@ const LoginScreen = () => {
               returnKeyType="done"
             />
 
+            <Pressable onPress={() => navigation.navigate('Signup')}>
+              <CustomText paddingRight={4} textAlign="right">
+                Sign up
+              </CustomText>
+            </Pressable>
             {/* Biometric Authentication Button - Only show if available */}
             {!isBiometricLoading && isBiometricAvailable && (
               <VStack paddingVertical="$8" alignItems="center">

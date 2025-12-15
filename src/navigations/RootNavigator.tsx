@@ -19,6 +19,8 @@ export const RootNavigator = () => {
     );
   }
 
+  console.log('User in here', user);
+
   return (
     <NavigationContainer>
       {user ? <AppNavigator /> : <AuthNavigator />}

@@ -3,7 +3,8 @@ import { useContext } from 'react';
 import { AuthContext } from '../providers/AuthProvider';
 
 export const useUserAuth = () => {
-  const { user, isLoading, login, signup, logout } = useContext(AuthContext);
+  const { user, isLoading, login, signup, logout, setUser } =
+    useContext(AuthContext);
 
   return {
     user,
@@ -11,5 +12,6 @@ export const useUserAuth = () => {
     login,
     signup,
     logout,
+    setUser,
   };
 };

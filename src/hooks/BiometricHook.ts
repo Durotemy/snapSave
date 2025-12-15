@@ -5,7 +5,7 @@ import { BiometricAvailability, BiometricType } from '../services/biometrics';
 
 interface UseBiometricReturn {
   isAvailable: boolean;
-  biometricType: BiometricType | null; // Changed from biometryType
+  biometricType: BiometricType | null;
   biometricTypeName: string | null;
   biometricIconName: string | null;
   isLoading: boolean;
@@ -18,7 +18,6 @@ interface UseBiometricReturn {
 
 export const useBiometric = (): UseBiometricReturn => {
   const [isAvailable, setIsAvailable] = useState<boolean>(false);
-  // Changed variable name to biometricType (without 'y') for consistency
   const [biometricType, setBiometricType] = useState<BiometricType | null>(
     null,
   );
@@ -106,9 +105,13 @@ export const useBiometric = (): UseBiometricReturn => {
 
   return {
     isAvailable,
-    biometricType, // Now consistent
-    biometricTypeName: biometricService.getBiometricType(biometricType),
-    biometricIconName: biometricService.getBiometricIconName(biometricType),
+    biometricType,
+    biometricTypeName: biometricService.getBiometricType(
+      biometricType as BiometricType,
+    ),
+    biometricIconName: biometricService.getBiometricIconName(
+      biometricType as BiometricType,
+    ),
     isLoading,
     authenticate,
     checkAvailability,
